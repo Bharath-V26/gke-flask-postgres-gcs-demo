@@ -100,6 +100,13 @@ kubectl get hpa flask-hpa -w
 ```
 You should see replicas increase based on load.
 ------------------------------------------------------------------------------------------------
+Cleanup
+
+Remove all deployed resources:
+```
+make clean
+```
+------------------------------------------------------------------------------------------------
 Notes
 
 GCS key is ignored in Git (.gitignore) for security
