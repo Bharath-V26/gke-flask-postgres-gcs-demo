@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: flask-config
+data:
+  DB_HOST: postgres
+  DB_NAME: flaskdb
+  GCS_BUCKET: flask-demo
+

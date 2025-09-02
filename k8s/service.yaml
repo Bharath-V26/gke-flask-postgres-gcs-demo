@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-gcs-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: flask-gcs-demo
+  ports:
+    - port: 80
+      targetPort: 8080   
+

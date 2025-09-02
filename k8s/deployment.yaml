@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-gcs-demo
+  labels:
+    app: flask-gcs-demo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: flask-gcs-demo
+  template:
+    metadata:
+      labels:
+        app: flask-gcs-demo
+    spec:
+      serviceAccountName: flask-gcs-sa
+      containers:
+      - name: flask-gcs-demo
+        image: asia-south1-docker.pkg.dev/gei-iq/flask-repo/flask-gcs-demo:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        env:
+          - name: DB_HOST
+            value: "postgres"
+          - name: DB_NAME
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secret
+                key: POSTGRES_DB
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secret
+                key: POSTGRES_USER
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secret
+                key: POSTGRES_PASSWORD
+          - name: GCS_BUCKET
+            valueFrom:
+              configMapKeyRef:
+                name: flask-config
+                key: GCS_BUCKET
+          - name: GOOGLE_APPLICATION_CREDENTIALS
+            value: /secrets/gcs-key.json
+        volumeMounts:
+          - name: gcs-key
+            mountPath: /secrets
+            readOnly: true
+        readinessProbe:
+          httpGet:
+            path: /up-returns
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /up-returns
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+      volumes:
+        - name: gcs-key
+          secret:
+            secretName: flask-gcs-sa-key
+
