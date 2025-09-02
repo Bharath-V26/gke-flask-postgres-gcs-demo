@@ -16,13 +16,13 @@ REPO_NAME="flask-repo"
 REGISTRY="asia-south1-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/$IMAGE_NAME:$IMAGE_TAG"
 
 # -----------------------------
-# 1️⃣ Create GCS bucket
+# 1 Create GCS bucket
 # -----------------------------
 echo "Creating GCS bucket: $BUCKET_NAME"
 gsutil mb -l $REGION gs://$BUCKET_NAME/ || echo "Bucket may already exist"
 
 # -----------------------------
-# 2️⃣ Create GKE cluster
+# 2️Create GKE cluster
 # -----------------------------
 echo "Creating GKE cluster: $CLUSTER_NAME"
 gcloud container clusters create $CLUSTER_NAME \
@@ -37,7 +37,7 @@ gcloud container clusters create $CLUSTER_NAME \
 gcloud container clusters get-credentials $CLUSTER_NAME --region $REGION
 
 # -----------------------------
-# 3️⃣ Build & push Docker image
+# 3️ Build & push Docker image
 # -----------------------------
 echo "Building Docker image"
 docker build -t $IMAGE_NAME ../app/
@@ -49,13 +49,13 @@ echo "Pushing Docker image"
 docker push $REGISTRY
 
 # -----------------------------
-# 4️⃣ Apply Kubernetes manifests
+# 4️ Apply Kubernetes manifests
 # -----------------------------
 echo "Applying Kubernetes manifests"
 kubectl apply -f ../k8s/
 
 # -----------------------------
-# 5️⃣ Wait for LoadBalancer IP
+# 5️ Wait for LoadBalancer IP
 # -----------------------------
 echo "Waiting for Flask LoadBalancer IP..."
 LB_IP=""
@@ -66,9 +66,9 @@ done
 echo "Flask app is available at http://$LB_IP"
 
 # -----------------------------
-# 6️⃣ Example curl commands
+# 6️ Example curl commands
 # -----------------------------
-echo -e "\n✅ Example curl commands:"
+echo -e "\n Example curl commands:"
 echo "Health check: curl http://$LB_IP/up-returns"
 echo "Add user: curl -X POST http://$LB_IP/add -H 'Content-Type: application/json' -d '{\"name\":\"Bharath\"}'"
 echo "List users: curl http://$LB_IP/list"
