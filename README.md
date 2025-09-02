@@ -39,7 +39,7 @@ cd gke-flask-postgres-gcs-demo
 
 2. Set up your GKE cluster and context:
 ```
-gcloud container clusters get-credentials <CLUSTER_NAME> --zone <ZONE> --project <PROJECT_ID>
+gcloud container clusters get-credentials <CLUSTER_NAME> --region <REGION> --project <PROJECT_ID>
 ```
 
 3. Make sure the GCS key is not tracked in Git and set the environment variable:
@@ -47,9 +47,10 @@ gcloud container clusters get-credentials <CLUSTER_NAME> --zone <ZONE> --project
 export GOOGLE_APPLICATION_CREDENTIALS="/path/to/gcs-key.json"
 ```
 
-Deployment
+### Deployment
 
-You can deploy the entire stack using one command:
+You can deploy the entire stack in **one command**:
+
 ```
 make deploy
 ```
