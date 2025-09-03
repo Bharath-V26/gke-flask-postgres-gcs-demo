@@ -105,9 +105,11 @@ def get_file(filename):
     if not blob.exists():
         return jsonify({"error": "File not found"}), 404
 
-    url = blob.generate_signed_url(expiration=3600)  # 1 hour valid
-    return jsonify({"url": url})
-
+    def generate():
+        with blob.open("rb") as f:
+            while chunk := f.read(4096):
+                yield chunk
+    return Response(generate(), mimetype="application/octet-stream")
 # -------------------------
 # Run Flask app
 # -------------------------
